@@ -1,0 +1,100 @@
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #003366;
+    color: white;
+    padding: 10px 20px;
+  }
+  
+
+.logo {
+    text-align: center; 
+}
+
+.logo h3 {
+    margin: 0; 
+    font-size: 24px; 
+    color: whitesmoke; 
+}
+
+.logo .slogan {
+    margin: 0;
+    font-size: 14px; 
+    color: whitesmoke; 
+    font-style: italic; 
+}
+
+.auth-cart {
+    display: flex;
+    gap: 15px;
+  }
+  
+.auth-cart button {
+    padding: 10px 15px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  
+.auth-cart button:hover {
+    background-color: #0056b3;
+  }
+
+/* gio hang */
+
+.cart {
+  padding: 0; /* Loại bỏ padding để nút chỉ vừa với hình ảnh */
+  border: none; /* Loại bỏ viền nút */
+  background-color: transparent; /* Nền trong suốt */
+  cursor: pointer; /* Con trỏ hiển thị như nút bấm */
+}
+
+.cart-icon {
+  width: 24px; /* Đặt chiều rộng hình ảnh */
+  height: 24px; /* Đặt chiều cao hình ảnh */
+}
+
+.cart:hover .cart-icon {
+  filter: brightness(1.2); /* Tăng độ sáng khi hover */
+}
+
+  /* Sửa lại thanh tìm kiếm */
+.search-bar {
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+  
+.search-bar .search {
+    height: 30px;
+    padding-left: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+
+.search-bar input {
+    width: 700px;
+    height: 30px;
+    padding-left: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+  
+.search-bar .search-btn {
+    position: absolute; 
+    right: 1px;  
+    top: 50%;  
+    transform: translateY(-50%); 
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+  }
+  
+.search-btn img {
+    width: 25px;
+    height: 25px;
+  }
