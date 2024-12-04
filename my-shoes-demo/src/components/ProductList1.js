@@ -2,8 +2,10 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import "../styles/ProductList1.css";
+import axios from 'axios';
+import axiosInstance from '../config/axiosConfig';
 
-const API_URL = "https://57e1-2402-800-61c5-2b29-10e1-cf58-a825-68b0.ngrok-free.app/product?page=0&size=100&sortBy=rating_desc";
+const API_URL = "/product?page=0&size=100&sortBy=rating_desc";
 
 const ProductList = () => {
   const [products, setProducts] = useState([]); // Danh sách sản phẩm
@@ -16,7 +18,8 @@ const ProductList = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch(API_URL);
+        const response = await axiosInstance.get(API_URL);
+        console.log(response);
         if (!response.ok) {
           throw new Error(`Lỗi HTTP: ${response.status}`);
         }
