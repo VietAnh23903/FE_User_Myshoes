@@ -1,4 +1,11 @@
 
+.ant-card .ant-card-meta-description{
+  color: black;
+}
+.product-price{
+  font-weight: bold;
+  font-size: 20px;
+}
 
    .product-section {
     margin: 20px auto;
@@ -27,6 +34,7 @@
   .product-list {
     display: grid;
     grid-template-columns: repeat(5, 1fr); /* Tối đa 5 sản phẩm mỗi dòng */
+    margin-bottom: 20px;
     
   }
   
