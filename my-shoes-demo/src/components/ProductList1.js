@@ -3,12 +3,14 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import "../styles/ProductList1.css";
 import fetchAPI from '../config/axiosConfig';
+import { Pagination } from 'antd';
 
-const API_URL = "/product?page=0&size=100&sortBy=rating_desc";
+const API_URL = "/product";
 
 const ProductList = () => {
   const [products, setProducts] = useState([]); // Danh sách sản phẩm
   const [currentPage, setCurrentPage] = useState(1); // Trang hiện tại
+  const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(true); // Trạng thái tải dữ liệu
   const [error, setError] = useState(null); // Lưu lỗi (nếu có)
 
@@ -17,30 +19,29 @@ const ProductList = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetchAPI.get(API_URL);
+        const response = await fetchAPI.get(API_URL,{
+          page:currentPage-1,
+          size:itemsPerPage
+        });
         const data = response.data;        
-        setProducts(data || []); 
-        setIsLoading(false); 
+        setProducts(data || []);
+        setTotalPages(response.totalPage||1)        
+        setIsLoading(false);        
       } catch (err) {
-        setError(err.message); 
+        setError(err.message);
         setIsLoading(false);
       }
     };
 
     fetchProducts();
-  }, []);
+  }, [currentPage]);
 
-  // Tổng số trang
-  const totalPages = Math.ceil(products.length / itemsPerPage);
+console.log("render");
 
-  // Lấy danh sách sản phẩm của trang hiện tại
-  const currentProducts = products.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
 
   // Xử lý thay đổi trang
   const handlePageChange = (page) => {
+    console.log(page);
     setCurrentPage(page);
   };
 
@@ -56,7 +57,7 @@ const ProductList = () => {
       ) : (
         <>
           <div className="product-list">
-            {currentProducts.map((product) => (
+            {products&& products.map((product) => (
               <div key={product.id} className="product-item">
                 <Link to={`/product/${product.id}`}>
                   <div className="product-card">
@@ -75,31 +76,7 @@ const ProductList = () => {
               </div>
             ))}
           </div>
-
-          {/* Phân trang */}
-          <div className="pagination">
-            <button
-              disabled={currentPage === 1}
-              onClick={() => handlePageChange(currentPage - 1)}
-            >
-              Trang trước
-            </button>
-            {Array.from({ length: totalPages }, (_, index) => (
-              <button
-                key={index + 1}
-                className={currentPage === index + 1 ? "active" : ""}
-                onClick={() => handlePageChange(index + 1)}
-              >
-                {index + 1}
-              </button>
-            ))}
-            <button
-              disabled={currentPage === totalPages}
-              onClick={() => handlePageChange(currentPage + 1)}
-            >
-              Trang sau
-            </button>
-          </div>
+          <Pagination align='center' defaultCurrent={currentPage} total={totalPages} defaultPageSize={1} onChange={handlePageChange}  />
         </>
       )}
     </div>
