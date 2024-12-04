@@ -2,8 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import "../styles/ProductList1.css";
-import axios from 'axios';
-import axiosInstance from '../config/axiosConfig';
+import fetchAPI from '../config/axiosConfig';
 
 const API_URL = "/product?page=0&size=100&sortBy=rating_desc";
 
@@ -18,19 +17,9 @@ const ProductList = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axiosInstance.get(API_URL);
-        console.log(response);
-        if (!response.ok) {
-          throw new Error(`Lỗi HTTP: ${response.status}`);
-        }
-        const contentType = response.headers.get("content-type");
-        if (!contentType || !contentType.includes("application/json")) {
-          throw new Error("API không trả về dữ liệu JSON hợp lệ");
-        }
-        const data = await response.json();
-
-        // Truy cập đúng trường `data.data` trong API
-        setProducts(data.data.data || []); 
+        const response = await fetchAPI.get(API_URL);
+        const data = response.data;        
+        setProducts(data || []); 
         setIsLoading(false); 
       } catch (err) {
         setError(err.message); 
