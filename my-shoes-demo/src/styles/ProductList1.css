@@ -26,7 +26,7 @@
   
   .product-list {
     display: grid;
-    grid-template-columns: repeat(5, 1fr); 
+    grid-template-columns: repeat(5, 1fr); /* Tối đa 5 sản phẩm mỗi dòng */
     
   }
   

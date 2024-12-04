@@ -1,12 +1,5 @@
 
-.navbar2 {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #003366;
-    color: white;
-    padding: 5px 20px;
-  }
+
 .nav-links {
     list-style: none;
     display: flex;
@@ -23,6 +16,7 @@
     justify-content: space-between;
     align-items: center;
     background-color: #003366;
+    height: 40px;
     color: white;
     padding: 5px 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);

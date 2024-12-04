@@ -1,37 +1,115 @@
-import React from 'react';
-import Product from './Product1';
-import '../styles/ProductList1.css';
 
-const products = [
-  { id: 1, name: 'Giày Adidas EQ21', price: '1.890.000đ', sold: '1', rating: '5.0', img: 'https://product.hstatic.net/1000150581/product/1124a7790-2__1_-2_5cc708555e894a9f8ab32abbeeff8a6c_1024x1024.jpg' },
-  { id: 2, name: 'Giày Adidas EQ21', price: '1.890.000đ', sold: '2', rating: '5.0', img: 'https://product.hstatic.net/1000150581/product/1124a7790-2__1_-2_5cc708555e894a9f8ab32abbeeff8a6c_1024x1024.jpg' },
-  { id: 3, name: 'Giày Adidas EQ21', price: '1.890.000đ', sold: '3', rating: '4.0', img: 'https://product.hstatic.net/1000150581/product/1124a7790-2__1_-2_5cc708555e894a9f8ab32abbeeff8a6c_1024x1024.jpg' },
-  { id: 4, name: 'Giày Adidas EQ21', price: '1.890.000đ', sold: '4', rating: '4.0', img: 'https://product.hstatic.net/1000150581/product/1124a7790-2__1_-2_5cc708555e894a9f8ab32abbeeff8a6c_1024x1024.jpg' },
-  { id: 5, name: 'Giày Adidas EQ21', price: '1.890.000đ', sold: '5', rating: '4.0', img: 'https://product.hstatic.net/1000150581/product/1124a7790-2__1_-2_5cc708555e894a9f8ab32abbeeff8a6c_1024x1024.jpg' },
-  { id: 6, name: 'Giày Adidas EQ21', price: '1.890.000đ', sold: '6', rating: '4.0', img: 'https://product.hstatic.net/1000150581/product/1124a7790-2__1_-2_5cc708555e894a9f8ab32abbeeff8a6c_1024x1024.jpg' },
-  { id: 7, name: 'Giày Adidas EQ21', price: '1.890.000đ', sold: '7', rating: '5.0', img: 'https://product.hstatic.net/1000150581/product/1124a7790-2__1_-2_5cc708555e894a9f8ab32abbeeff8a6c_1024x1024.jpg' },
-  { id: 8, name: 'Giày Adidas EQ21', price: '1.890.000đ', sold: '8', rating: '5.0', img: 'https://product.hstatic.net/1000150581/product/1124a7790-2__1_-2_5cc708555e894a9f8ab32abbeeff8a6c_1024x1024.jpg' },
-  { id: 9, name: 'Giày Adidas EQ21', price: '1.890.000đ', sold: '9', rating: '5.0', img: 'https://product.hstatic.net/1000150581/product/1124a7790-2__1_-2_5cc708555e894a9f8ab32abbeeff8a6c_1024x1024.jpg' },
-  { id: 10, name: 'Giày Adidas EQ21', price: '1.890.000đ', sold: '10', rating: '5.0', img: 'https://product.hstatic.net/1000150581/product/1124a7790-2__1_-2_5cc708555e894a9f8ab32abbeeff8a6c_1024x1024.jpg' },
-  { id: 11, name: 'Giày Adidas EQ21', price: '1.890.000đ', sold: '11', rating: '4.0', img: 'https://product.hstatic.net/1000150581/product/1124a7790-2__1_-2_5cc708555e894a9f8ab32abbeeff8a6c_1024x1024.jpg' },
-  { id: 12, name: 'Giày Adidas EQ21', price: '1.890.000đ', sold: '12', rating: '4.0', img: 'https://product.hstatic.net/1000150581/product/1124a7790-2__1_-2_5cc708555e894a9f8ab32abbeeff8a6c_1024x1024.jpg' },
-  { id: 13, name: 'Giày Adidas EQ21', price: '1.890.000đ', sold: '13', rating: '4.0', img: 'https://product.hstatic.net/1000150581/product/1124a7790-2__1_-2_5cc708555e894a9f8ab32abbeeff8a6c_1024x1024.jpg' },
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import "../styles/ProductList1.css";
 
-
-  
-  // Thêm các sản phẩm khác
-];
+const API_URL = "https://57e1-2402-800-61c5-2b29-10e1-cf58-a825-68b0.ngrok-free.app/product?page=0&size=100&sortBy=rating_desc";
 
 const ProductList = () => {
+  const [products, setProducts] = useState([]); // Danh sách sản phẩm
+  const [currentPage, setCurrentPage] = useState(1); // Trang hiện tại
+  const [isLoading, setIsLoading] = useState(true); // Trạng thái tải dữ liệu
+  const [error, setError] = useState(null); // Lưu lỗi (nếu có)
+
+  const itemsPerPage = 35; // Số sản phẩm mỗi trang
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch(API_URL);
+        if (!response.ok) {
+          throw new Error(`Lỗi HTTP: ${response.status}`);
+        }
+        const contentType = response.headers.get("content-type");
+        if (!contentType || !contentType.includes("application/json")) {
+          throw new Error("API không trả về dữ liệu JSON hợp lệ");
+        }
+        const data = await response.json();
+
+        // Truy cập đúng trường `data.data` trong API
+        setProducts(data.data.data || []); 
+        setIsLoading(false); 
+      } catch (err) {
+        setError(err.message); 
+        setIsLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  // Tổng số trang
+  const totalPages = Math.ceil(products.length / itemsPerPage);
+
+  // Lấy danh sách sản phẩm của trang hiện tại
+  const currentProducts = products.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  // Xử lý thay đổi trang
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
   return (
     <div className="product-section">
-      {/* Thêm tiêu đề sản phẩm mới */}
       <h2 className="product-title">SẢN PHẨM MỚI</h2>
-      <div className="product-list">
-        {products.map((product) => (
-          <Product key={product.id} product={product} />
-      ))}
-      </div>
+      {isLoading ? (
+        <p>Đang tải sản phẩm...</p>
+      ) : error ? (
+        <p style={{ color: "red" }}>
+          Đã xảy ra lỗi: {error}. Vui lòng thử lại sau.
+        </p>
+      ) : (
+        <>
+          <div className="product-list">
+            {currentProducts.map((product) => (
+              <div key={product.id} className="product-item">
+                <Link to={`/product/${product.id}`}>
+                  <div className="product-card">
+                    <img
+                      src={product.imageUrl || "https://via.placeholder.com/150"}
+                      alt={product.name}
+                      className="product-img"
+                    />
+                    <h3 className="product-name">{product.name}</h3>
+                    <p className="product-price">{product.price.toLocaleString()}đ</p>
+                    <p className="product-rating">
+                      ⭐ {product.rating > 0 ? product.rating : "Chưa có đánh giá"}
+                    </p>
+                  </div>
+                </Link>
+              </div>
+            ))}
+          </div>
+
+          {/* Phân trang */}
+          <div className="pagination">
+            <button
+              disabled={currentPage === 1}
+              onClick={() => handlePageChange(currentPage - 1)}
+            >
+              Trang trước
+            </button>
+            {Array.from({ length: totalPages }, (_, index) => (
+              <button
+                key={index + 1}
+                className={currentPage === index + 1 ? "active" : ""}
+                onClick={() => handlePageChange(index + 1)}
+              >
+                {index + 1}
+              </button>
+            ))}
+            <button
+              disabled={currentPage === totalPages}
+              onClick={() => handlePageChange(currentPage + 1)}
+            >
+              Trang sau
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 };

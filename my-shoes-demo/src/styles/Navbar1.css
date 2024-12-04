@@ -43,24 +43,6 @@
     background-color: #0056b3;
   }
 
-/* gio hang */
-
-.cart {
-  padding: 0; /* Loại bỏ padding để nút chỉ vừa với hình ảnh */
-  border: none; /* Loại bỏ viền nút */
-  background-color: transparent; /* Nền trong suốt */
-  cursor: pointer; /* Con trỏ hiển thị như nút bấm */
-}
-
-.cart-icon {
-  width: 24px; /* Đặt chiều rộng hình ảnh */
-  height: 24px; /* Đặt chiều cao hình ảnh */
-}
-
-.cart:hover .cart-icon {
-  filter: brightness(1.2); /* Tăng độ sáng khi hover */
-}
-
   /* Sửa lại thanh tìm kiếm */
 .search-bar {
     display: flex;
