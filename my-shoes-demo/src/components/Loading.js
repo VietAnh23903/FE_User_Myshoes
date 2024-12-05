@@ -4,6 +4,7 @@ import { Spin } from 'antd';
 const Loading = ({  }) => {
     return <>
         <Spin
+            fullscreen
             indicator={
                 <LoadingOutlined
                     style={{
