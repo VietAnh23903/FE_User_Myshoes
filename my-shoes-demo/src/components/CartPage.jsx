@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useCart } from '../components/CartContext'; // Import CartContext
 import { useNavigate } from 'react-router-dom'; // Dùng để điều hướng trang thanh toán
 import "../styles/CartPage.css"; // Import CSS cho trang giỏ hàng
@@ -6,14 +6,6 @@ import "../styles/CartPage.css"; // Import CSS cho trang giỏ hàng
 const CartPage = () => {
   const { cartItems, removeFromCart, updateQuantity, totalPrice } = useCart(); // Lấy giỏ hàng và hàm từ CartContext
   const navigate = useNavigate(); // Khai báo navigate để chuyển hướng tới trang thanh toán
-
-  useEffect(()=>{
-    const user=JSON.parse(localStorage.getItem("user"));
-    if(!user){
-      navigate("/");
-    }
-  
-  })
 
   // Tính tổng giá trị giỏ hàng
   const getTotalPrice = () => {

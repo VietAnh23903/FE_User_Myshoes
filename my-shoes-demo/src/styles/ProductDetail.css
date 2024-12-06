@@ -74,10 +74,11 @@
 }
 
 .product-rating-sold {
-  display: flex;
-  justify-content: space-between;
-  font-size: 14px;
-  color: #757575;
+  display: flex; /* Sử dụng flexbox */
+  align-items: center; /* Căn giữa theo trục dọc */
+  gap: 5px; /* Khoảng cách giữa các phần tử */
+  font-size: 15px;
+  color: #000000;
   font-weight: bold;
 }
 
@@ -85,11 +86,13 @@
   font-size: 20px;
   color: #f53d2d;
   font-weight: bold;
+  text-align: left;
 }
 
 .product-variant,
 .product-size {
   font-size: 16px;
+  text-align: left;
 }
 
 .product-buttons {
@@ -119,6 +122,7 @@
 
 .product-quantity {
   margin-top: 20px;
+  text-align: left;
 }
 
 .quantity-control {
@@ -174,43 +178,71 @@
 }
 
 .review-item {
-  margin-bottom: 30px;
   border-top: 1px solid #ddd;
-  padding-top: 20px;
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .review-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: 10px;
+}
+
+.review-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.review-info {
+  display: flex;
+  flex-direction: column;
 }
 
 .review-username {
+  text-align: left;
   font-weight: bold;
 }
 
 .review-rating {
+  text-align: left;
   color: #ff9800;
+  margin-top: 5px;
 }
 
 .review-date {
+  font-size: 12px;
   color: #888;
+  margin-top: 2px;
 }
 
-.review-images img {
-  width: 100px;
-  margin: 5px;
-  border-radius: 5px;
-  object-fit: cover;
+.review-product {
+  font-size: 14px;
+  color: #666;
+  margin-top: 10px;
+  text-align: left;
+}
+
+.review-comment {
+  font-size: 16px;
+  text-align: left;
+  margin: 10px 0;
 }
 
 .review-images {
+  display: flex;
+  gap: 10px;
   margin-top: 10px;
 }
 
-.review-item p {
-  font-size: 16px;
-  margin: 10px 0;
+.review-images img {
+  width: 80px;
+  height: 80px;
+  border-radius: 5px;
+  object-fit: cover;
 }
 
 /* Responsive */

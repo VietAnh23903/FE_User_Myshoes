@@ -101,11 +101,12 @@ const ProductDetail = () => {
           <h1 className="product-name">{productDetail.name}</h1>
           <div className="product-rating-sold">
             <span>⭐ {productDetail.rating}/5.0</span>
+            <b>|</b>
             <span>{productDetail.sold} đã bán</span>
           </div>
           <div className="product-price-section">
             <span className="product-price">
-              {price.toLocaleString()}đ
+              Giá bán: {price.toLocaleString()}đ
             </span>
           </div>
           <div className="product-size">
@@ -118,8 +119,9 @@ const ProductDetail = () => {
             </Radio.Group>
           </div>
           <div className="product-quantity">
-            <h3>Số lượng: {stock}</h3>
+            <h3>Tồn kho: {stock}</h3>
             <div className="quantity-control">
+              <h3>Số lượng: </h3>
               <button onClick={() => handleQuantityChange(quantity - 1)}>-</button>
               <input
                 type="number"
@@ -153,23 +155,31 @@ const ProductDetail = () => {
 
         {/* Danh sách đánh giá */}
        
-        {          
-          reviews.map(review=>(
-            <div key={review.id} className="review-item">
-              <div className="review-header">
+        {reviews.map((review) => (
+          <div key={review.id} className="review-item">
+            <div className="review-header">
+              <img
+                src={review.user.avatar}
+                alt={review.user.username}
+                className="review-avatar"
+              />
+              <div className="review-info">
                 <span className="review-username">{review.user.username}</span>
                 <span className="review-rating">⭐ {review.rating}</span>
-                <span className="review-date">{review.date}</span>
-              </div>
-              <p>{review.comment}</p>
-              <div className="review-images">
-                {review.imageUrls.map((img, index) => (
-                  <img key={index} src={img} alt={`Review ${index}`} />
-                ))}
+                <span className="review-date">
+                  {new Date(review.reviewedAt).toLocaleString()} | Phân loại hàng: {review.product.variants["kích cỡ"]}
+                </span>
               </div>
             </div>
-          ))
-        }
+            <p className="review-comment">{review.comment}</p>
+            <div className="review-images">
+              {review.imageUrls.map((img, index) => (
+                <img key={index} src={img} alt={`Review Image ${index}`} />
+              ))}
+            </div>
+          </div>
+        ))}
+
       </section>
       </div>}
     </>
