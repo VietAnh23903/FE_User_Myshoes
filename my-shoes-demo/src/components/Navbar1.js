@@ -1,13 +1,25 @@
-import React, { useContext,useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Navbar1.css';
 import searchIcon from '../assets/search.png';
 import { Link } from 'react-router-dom';
 
 
+const API_URL="/cart";
 const Navbar = () => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [isLogin, setIsLogin] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      setIsLogin(true);
+    }
+    const callAPI=async ()=>{
+
+    };
+    callAPI();
+  }, []);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -15,6 +27,7 @@ const Navbar = () => {
       navigate(`/search?q=${searchQuery.trim()}`);
     }
   };
+
 
   return (
     <nav className="navbar">
@@ -39,15 +52,28 @@ const Navbar = () => {
       </form>
 
       <div className="auth-cart">
-        <Link to="/login">
-          <button className="sign-in">Đăng nhập</button>
-        </Link>
-        <Link to="/register">
-          <button className="sign-up">Đăng ký</button>
-        </Link>
-        <Link to="/cart">
-          <button className="cart">Giỏ hàng</button>
-        </Link>
+
+        {!isLogin ? <>
+          <Link to="/login">
+            <button className="sign-in">Đăng nhập</button>
+          </Link>
+          <Link to="/register">
+            <button className="sign-up">Đăng ký</button>
+          </Link>
+        </> :
+          <>
+            <Link to="/cart">
+              <button className="cart">Giỏ hàng</button>
+            </Link>
+            <Link to="/">
+            <button className="cart" onClick={() =>{
+               localStorage.removeItem("token");
+               localStorage.removeItem("user");
+               setIsLogin(false);
+            }}>Đăng xuất</button>
+            </Link>
+          </>
+        }
       </div>
     </nav>
   );

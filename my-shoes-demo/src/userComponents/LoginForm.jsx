@@ -1,29 +1,40 @@
 import React, { useState } from 'react';
 import '../styles/LoginForm.css';
+import fetchAPI from '../config/axiosConfig';
+
+const API_URL = "/auth/login";
 
 const Login = () => {
-  const [phone, setPhone] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
-  const submitForm = (e) => {
+  const submitForm = async (e) => {
     e.preventDefault();
 
     // Kiểm tra dữ liệu đầu vào
-    if (!phone || !password) {
+    if (!username || !password) {
       setErrorMessage('Vui lòng nhập đầy đủ thông tin!');
       return;
     }
 
     // Xử lý logic đăng nhập ở đây (có thể gọi API)
-    console.log('Phone:', phone, 'Password:', password);
+    console.log('username:', username, 'Password:', password);
+    try {
+      const response = await fetchAPI.post(API_URL, { username, password });
+      localStorage.setItem("token",response.token);
+      localStorage.setItem("user",JSON.stringify(response.user));
+      window.location.href="/";
+    } catch (e) {
+      console.log(e);
+      setErrorMessage('Thông tin đăng nhập không chính xác!');
+    }
+
 
     // Nếu thành công
     // navigate("/dashboard"); // Chuyển hướng sau khi đăng nhập thành công
-    setErrorMessage(''); // Reset lỗi nếu có
 
     // Xử lý trường hợp thất bại (nếu API trả lỗi)
-    // setErrorMessage('Thông tin đăng nhập không chính xác!');
   };
 
   return (
@@ -40,17 +51,17 @@ const Login = () => {
             )}
             {/* Số điện thoại */}
             <div className="form-group">
-              <label htmlFor="phone" className="form-label">
-                Số điện thoại hoặc email
+              <label htmlFor="username" className="form-label">
+                Nhập tài khoản
               </label>
               <input
                 type="tel"
-                id="phone"
-                name="phone"
+                id="username"
+                name="username"
                 className="form-input"
                 placeholder="Nhập số điện thoại"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
               />
             </div>
             {/* Mật khẩu */}
