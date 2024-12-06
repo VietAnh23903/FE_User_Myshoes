@@ -14,6 +14,7 @@ import CartPage from './components/CartPage';
 import { CartProvider } from './components/CartContext';
 import ProductDetail from './components/ProductDetail'; // Import ProductDetail
 import SearchResult from "./components/SearchResult";
+import OrderTracking from "./components/OrderTracking";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
           <Route path="/cart" element={<CartPage />} />
           <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/search" element={<SearchResult />} />
+          <Route path="/order-tracking" element={<OrderTracking />} />
         </Routes>
       </div>
     </CartProvider>
