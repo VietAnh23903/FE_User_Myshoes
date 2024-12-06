@@ -4,60 +4,56 @@ import { useCart } from "../components/CartContext"; // Để thêm sản phẩm
 import fetchAPI from '../config/axiosConfig';
 import "../styles/ProductDetail.css";
 import Loading from './Loading';
-import { Flex, Image, Radio } from "antd";
+import { Flex, Image, Input, Radio } from "antd";
 
 const API_URL = "/product";
+const API_REVIEW_URL = "/review/product";
 
 const ProductDetail = () => {
   const { id } = useParams(); // Lấy id từ URL
-  const { addToCart } = useCart(); // Hàm để thêm sản phẩm vào giỏ hàng
   const [productDetail, setProductDetail] = useState({});
   const [prirmaryImage, setPrimaryImage] = useState("");
-  const [images, setImages] = useState("");
+  const [images, setImages] = useState([]);
   const [variants, setVariants] = useState("");
   const [price, setPrice] = useState(0);
-  const [stock,setStock] = useState(0);
+  const [stock, setStock] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [quantity, setQuantity] = useState(1); // Số lượng
+  const [reviews,setReviews] =useState([]);
 
   useEffect(() => {
     const fetchProduct = async () => {
       setIsLoading(true);
       const response = await fetchAPI.get(API_URL + `/${id}`);
-      setPrimaryImage(response.images.find(item => item.isPrimary));
-      setImages(response.images.filter(item=>!item.isPrimasry));
-      setProductDetail(response);
-      setVariants(response.productVariants);
-      setPrice(productDetail.price);
-      const totalStock = response.productVariants.reduce((sum, product) => sum + product.stock, 0);
-      setStock(totalStock);
-      setIsLoading(false);
+      const reveiewsResponse=await fetchAPI.get(API_REVIEW_URL + `/${id}`);
+      if(reveiewsResponse){
+        setReviews(reveiewsResponse.data);
+      }
+      if (response) {
+        setPrimaryImage(response.images.find(item => item.isPrimary));
+        setImages(response.images);
+        setProductDetail(response);
+        setVariants(response.productVariants);
+        setPrice(response.price);
+        const totalStock = response.productVariants.reduce((sum, product) => sum + product.stock, 0);
+        setStock(totalStock);
+        setIsLoading(false);
+      }
     }
     fetchProduct();
-
-
   }, []);
-
-
-  // const [quantity, setQuantity] = useState(1);
-  // const [size, setSize] = useState(null); // Thêm state cho size
-
-  // // Tính tổng tiền
-  // const calculateTotal = () => {
-  //   const price = parseFloat(product.price.replace(/\./g, "").replace("đ", ""));
-  //   return (price * quantity).toLocaleString("vi-VN") + "đ";
-  // };
-
-  // // Hàm xử lý tăng giảm số lượng
-  // const handleQuantityChange = (type) => {
-  //   setQuantity((prev) => (type === "increase" ? prev + 1 : prev > 1 ? prev - 1 : prev));
-  // };
-
-  // Xử lý chọn size
+  console.log(reviews);
+  
   const handleSizeChange = (e) => {
     const value = e.target.value;
     setPrice(value.price);
     setStock(value.stock);
   };
+
+  const handleQuantityChange = (value) => {
+    if (value >= 1 && value <= stock) setQuantity(value);
+  };
+
 
   // // Xử lý thêm vào giỏ hàng
   // const handleAddToCart = () => {
@@ -78,61 +74,110 @@ const ProductDetail = () => {
   //   }
   // };
 
+
   return (
-    <div className="product-detail">
-      {isLoading ?
-        <Loading /> : <>
-          <Image
-            width={200}
-            src={prirmaryImage}
-          />
-          <div className="product-detail-left">
-            <img src={prirmaryImage.url} alt={productDetail.name} className="product-detail-image" />
+    <>
+      {isLoading ? <Loading /> : <div className="product-detail">
+        {/* Phần bên trái */}
+        <div className="product-detail-left">
+          <div className="main-image">
+            <Image  width={"100%"} height={"100%"}  src={prirmaryImage.url} />
           </div>
-          <div className="product-detail-right">
-            <h1 className="product-name">{productDetail.name}</h1>
-            <div className="product-rating-sold">
-              <span className="product-rating">⭐ {productDetail.rating}/5.0</span>
-              <span className="product-sold">{productDetail.sold} đã bán</span>
+          <div className="thumbnail-images">
+            {images.map((img, index) => (
+              <div
+                key={index}
+                className={`thumbnail-item ${prirmaryImage.id === img.id ? "active" : ""}`}
+                onMouseEnter={() => setPrimaryImage(img)}
+              >
+                <img src={img.url} alt={`Thumbnail ${index}`} />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Phần bên phải */}
+        <div className="product-detail-right">
+          <h1 className="product-name">{productDetail.name}</h1>
+          <div className="product-rating-sold">
+            <span>⭐ {productDetail.rating}/5.0</span>
+            <span>{productDetail.sold} đã bán</span>
+          </div>
+          <div className="product-price-section">
+            <span className="product-price">
+              {price.toLocaleString()}đ
+            </span>
+          </div>
+          <div className="product-size">
+            <h3>Kích thước:</h3>
+            <Radio.Group onChange={handleSizeChange}>
+              {variants.map(item => {
+                const value = Object.values(item.attributes)[0];
+                return (<Radio key={"size" + value} value={item}>{value}</Radio>)
+              })}
+            </Radio.Group>
+          </div>
+          <div className="product-quantity">
+            <h3>Số lượng: {stock}</h3>
+            <div className="quantity-control">
+              <button onClick={() => handleQuantityChange(quantity - 1)}>-</button>
+              <input
+                type="number"
+                value={quantity}
+                onChange={(e) => handleQuantityChange(parseInt(e.target.value) || 1)}
+                min="1"
+                max="99"
+              />
+              <button onClick={() => handleQuantityChange(quantity + 1)}>+</button>
             </div>
-            <div className="product-price-section">
-              <span className="product-price">{productDetail.price}</span>
-            </div>
-            <div>Số lượng: {stock}</div>
-            <div className="product-size">
-              <h3>Chọn size:</h3>
-              <Radio.Group onChange={handleSizeChange}>
-                {variants.map(item=>{
-                  const value = Object.values(item.attributes)[0];
-                  return (<Radio key={"size"+value} value={item}>{value}</Radio>)
-                })}
-              </Radio.Group>
-            </div>
-            {/*
-            <div className="product-quantity">
-              <h3>Số lượng:</h3>
-              <div className="quantity-controls">
-                <button onClick={() => handleQuantityChange("decrease")}>-</button>
-                <span>{quantity}</span>
-                <button onClick={() => handleQuantityChange("increase")}>+</button>
+          </div>
+          <div className="product-buttons">
+            <button className="add-to-cart">Thêm vào giỏ hàng</button>
+            <button className="buy-now">Mua ngay</button>
+          </div>
+        </div>
+
+        {/* Phần đánh giá sản phẩm */}
+        <section className="product-reviews">
+        <h2>Đánh giá sản phẩm</h2>
+        <div className="reviews-summary">
+          <div className="rating-summary">
+            <span className="average-rating">
+              {productDetail.rating} / 5 ⭐
+            </span>
+            <span className="total-reviews">
+              {reviews.length} Đánh giá
+            </span>
+          </div>
+        </div>
+
+        {/* Danh sách đánh giá */}
+       
+        {          
+          reviews.map(review=>(
+            <div key={review.id} className="review-item">
+              <div className="review-header">
+                <span className="review-username">{review.user.username}</span>
+                <span className="review-rating">⭐ {review.rating}</span>
+                <span className="review-date">{review.date}</span>
+              </div>
+              <p>{review.comment}</p>
+              <div className="review-images">
+                {review.imageUrls.map((img, index) => (
+                  <img key={index} src={img} alt={`Review ${index}`} />
+                ))}
               </div>
             </div>
-            <div className="product-total">
-              Tổng tiền: <span className="total-amount">{calculateTotal()}</span>
-            </div>
-            <div className="product-buttons">
-              <button className="add-to-cart" onClick={handleAddToCart}>
-                Thêm vào giỏ hàng
-              </button>
-              <button className="buy-now" onClick={handleBuyNow}>
-                Mua hàng ngay
-              </button>
-            </div> */}
-          </div>
+          ))
+        }
+      </section>
+      </div>}
+    </>
 
-        </>}
-    </div>
   );
+
 };
+
+
 
 export default ProductDetail;
