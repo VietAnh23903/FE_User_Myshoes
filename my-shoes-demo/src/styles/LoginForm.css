@@ -1,98 +1,145 @@
 /* Định dạng tổng thể */
 .login-section {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #f3f4f6; /* Màu nền nhạt */
-  }
-  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #e0e7ff, #f3f4f6);
+  /* Gradient nền mềm mại */
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.login-container {
+  width: 100%;
+  max-width: 400px;
+  padding: 30px;
+  background: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  /* Hiệu ứng đổ bóng */
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  /* Khoảng cách giữa các phần tử */
+}
+
+.login-title {
+  text-align: center;
+  font-size: 28px;
+  font-weight: 700;
+  color: #1f2937;
+  /* Màu chữ tối */
+  margin-bottom: 10px;
+  letter-spacing: 0.5px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  /* Khoảng cách giữa label và input */
+}
+
+.form-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  /* Màu xám đậm */
+}
+
+.form-input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #e5e7eb;
+  /* Viền nhạt */
+  border-radius: 8px;
+  font-size: 14px;
+  color: #111827;
+  /* Màu chữ tối */
+  background: #f9fafb;
+  /* Nền nhạt */
+  outline: none;
+  transition: border-color 0.3s, background-color 0.3s, box-shadow 0.3s;
+}
+
+.form-input:focus {
+  border-color: #6366f1;
+  /* Màu xanh khi focus */
+  background-color: #ffffff;
+  box-shadow: 0 0 6px rgba(99, 102, 241, 0.4);
+  /* Hiệu ứng ánh sáng */
+}
+
+.login-button {
+  width: 100%;
+  padding: 14px 20px;
+  background: linear-gradient(135deg, #6366f1, #818cf8);
+  /* Gradient nút */
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.3s;
+}
+
+.login-button:hover {
+  transform: translateY(-2px);
+  /* Hiệu ứng nâng nút */
+  box-shadow: 0 8px 15px rgba(99, 102, 241, 0.3);
+  /* Đổ bóng rõ hơn */
+}
+
+.error-message {
+  background: rgba(239, 68, 68, 0.1);
+  /* Màu nền đỏ nhạt */
+  color: #b91c1c;
+  /* Màu chữ đỏ đậm */
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  text-align: center;
+  border: 1px solid #fca5a5;
+  /* Viền đỏ nhạt */
+}
+
+.login-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.forgot-password,
+.register-link {
+  font-size: 14px;
+  color: #6366f1;
+  /* Màu xanh liên kết */
+  text-decoration: none;
+  transition: color 0.3s, font-weight 0.2s;
+}
+
+.forgot-password:hover,
+.register-link:hover {
+  color: #4f46e5;
+  /* Màu xanh đậm hơn khi hover */
+  font-weight: bold;
+}
+
+@media (max-width: 480px) {
   .login-container {
-    width: 100%;
-    max-width: 400px;
     padding: 20px;
-    background: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
   }
-  
+
   .login-title {
-    text-align: center;
     font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 20px;
-    color: #333333;
   }
-  
-  .form-group {
-    margin-bottom: 16px;
-  }
-  
-  .form-label {
-    display: block;
-    font-size: 14px;
-    font-weight: 600;
-    color: #555555;
-    margin-bottom: 8px;
-  }
-  
-  .form-input {
-    width: 100%;
-    padding: 10px 12px;
-    border: 1px solid #cccccc;
-    border-radius: 8px;
-    font-size: 14px;
-    outline: none;
-    transition: border-color 0.2s ease-in-out;
-  }
-  
-  .form-input:focus {
-    border-color: #4f46e5; /* Màu xanh khi focus */
-  }
-  
+
+  .form-input,
   .login-button {
-    width: 100%;
-    padding: 12px 20px;
-    background-color: #4f46e5;
-    color: #ffffff;
-    font-size: 16px;
-    font-weight: bold;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.2s ease-in-out;
-  }
-  
-  .login-button:hover {
-    background-color: #4338ca;
-  }
-  
-  .login-options {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 16px;
-  }
-  
-  .forgot-password,
-  .register-link {
     font-size: 14px;
-    color: #4f46e5;
-    text-decoration: none;
-    transition: color 0.2s ease-in-out;
+    padding: 10px 12px;
   }
-  
-  .forgot-password:hover,
-  .register-link:hover {
-    color: #4338ca;
-  }
-  
-  .error-message {
-    background-color: #fee2e2;
-    color: #b91c1c;
-    padding: 10px;
-    margin-bottom: 16px;
-    border-radius: 8px;
-    font-size: 14px;
-    text-align: center;
-  }
-  
+}

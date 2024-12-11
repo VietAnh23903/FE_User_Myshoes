@@ -1,0 +1,393 @@
+/* Checkout Section */
+.checkout-section {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .checkout-container {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 20px;
+  }
+
+  .checkout-container h2 {
+    font-size: 50px;
+    color: #003366;
+  }
+  
+  h2, h3 {
+    margin-bottom: 15px;
+  }
+  
+  .checkout-payment, .checkout-products, .checkout-shipping, .checkout-total {
+    margin-bottom: 20px;
+  }
+  
+  .checkout-payment, .checkout-products, .checkout-shipping {
+    margin-bottom: 20px;
+    text-align: left;
+  }
+  
+  .checkout-total {
+    text-align: right;
+  }
+  
+  /* Địa chỉ và phương thức vận chuyển */
+  .address-info, .shipping-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .change-address-btn, .change-shipping-btn {
+    background: none;
+    color: #003366;
+    text-decoration: underline;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  .checkout-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .checkout-table th,
+  .checkout-table td {
+    text-align: left;
+    padding: 10px;
+    border: 1px solid #ddd;
+  }
+  
+  .checkout-table th {
+    background-color: #f4f4f4;
+  }
+  
+  .product-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .product-image {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 5px;
+  }
+  
+  /* Tổng số tiền */
+  .checkout-total p {
+    font-size: 25px;
+    color: #f53d2d;
+  }
+  
+  .pay-now-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: #003366;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .pay-now-btn:hover {
+    background-color: #e02424;
+  }
+  
+  /* Modal Phương thức thanh toán */
+  .payment-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Nền mờ */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .modal-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    animation: fadeIn 0.3s ease-in-out;
+  }
+  
+  .modal-content h3 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  .payment-options {
+    margin: 20px 0;
+    text-align: left;
+  }
+  
+  .payment-options label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    font-size: 1rem;
+    cursor: pointer;
+    color: #555;
+  }
+  
+  .payment-options input {
+    margin-right: 10px;
+    accent-color: #003366; /* Màu sắc khi chọn */
+  }
+  
+  /* Nút trong Modal */
+  .modal-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    
+  }
+  
+  .modal-buttons button {
+    background: #003366; /* Màu nền chính */
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 15px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .modal-buttons button:hover {
+    background: #e64a19; /* Nút khi hover */
+  }
+  
+  .modal-buttons button:first-of-type {
+    background: #ccc; /* Nút Hủy có màu nền khác */
+    color: #333;
+  }
+  
+  .modal-buttons button:first-of-type:hover {
+    background: #b0b0b0; /* Nút hủy khi hover */
+  }
+  
+  /* Hiệu ứng xuất hiện modal */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  /* Nút Thay đổi trong Modal */
+.payment-selected {
+    justify-content: space-between;
+}
+
+.change-payment-btn {
+    background: none;
+    color: #003366;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    text-decoration: underline;
+    padding: 0;
+    padding-left: 10px;
+  }
+  
+  .change-payment-btn:hover {
+    color: #e02424;
+  }
+  
+  /* CSS Modal Địa Chỉ */
+.address-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .modal-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    text-align: center;
+  }
+  
+  .address-options label {
+    display: block;
+    margin-bottom: 10px;
+  }
+  
+  .address-options {
+    text-align: left;
+  }
+
+  .add-address-btn {
+    margin-top: 10px;
+    background: #003366;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .modal-buttons button {
+    margin: 10px;
+  }
+  
+  
+  /* CSS Modal nhập địa chỉ mới */
+/* CSS Modal nhập địa chỉ mới */
+/* CSS Modal nhập địa chỉ mới */
+.new-address-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4); /* Nền mờ */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    animation: fadeIn 0.3s ease-in-out; /* Thêm hiệu ứng fade-in */
+}
+
+/* Nội dung modal */
+.modal-content {
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 480px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); /* Thêm shadow cho modal */
+    animation: slideIn 0.3s ease-in-out; /* Thêm hiệu ứng slide-in */
+}
+
+/* Tiêu đề modal */
+.modal-content h3 {
+    font-size: 1.6rem;
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.modal-content p {
+    text-align: left;
+}
+
+/* Form nhập địa chỉ */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Khoảng cách giữa các input */
+}
+
+form label {
+    display: flex;
+    align-items: center; /* Căn chỉnh thẳng hàng */
+    gap: 10px; /* Khoảng cách giữa p và input */
+    font-size: 1rem;
+    color: #444;
+    font-weight: 500;
+}
+
+form p {
+    margin: 0;
+    width: 40%; /* Đặt chiều rộng p để chúng không chiếm quá nhiều không gian */
+}
+
+form input {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    outline: none;
+    width: 60%; /* Đặt chiều rộng cho input */
+    transition: border-color 0.3s;
+}
+
+form input:focus {
+    border-color: #f53d2d; /* Chỉnh màu khi focus vào input */
+}
+
+/* Nút Lưu và Hủy trong modal */
+.modal-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.modal-buttons button {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 30px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.modal-buttons button:first-of-type {
+    background-color: #ccc;
+    color: #333;
+}
+
+.modal-buttons button:first-of-type:hover {
+    background-color: #b0b0b0;
+}
+
+.modal-buttons button:last-of-type {
+    background-color: #f53d2d;
+    color: white;
+}
+
+.modal-buttons button:last-of-type:hover {
+    background-color: #e02424;
+}
+
+/* Hiệu ứng xuất hiện modal */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Hiệu ứng slideIn cho modal */
+@keyframes slideIn {
+    from {
+        transform: translateY(-10px);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+

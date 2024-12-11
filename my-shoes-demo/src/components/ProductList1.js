@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import "../styles/ProductList1.css";
 import fetchAPI from '../config/axiosConfig';
-import { Card, Pagination } from 'antd';
+import { Card, Flex, Pagination, Space } from 'antd';
 import Loading from './Loading';
 
 const { Meta } = Card;
@@ -59,34 +59,33 @@ const ProductList = () => {
         </p>
       ) : (
         <>
-          <div className="product-list">
+          <Flex gap="middle" align="center" wrap justify='space-around' >
             {products && products.map((product) => (
-              <div key={product.id} className="product-item">
-                <Link to={`/product/${product.id}`}>
-                  <Card
-                    hoverable
-                    style={{
-                      width: 240,
-                    }}
-                    cover={<img alt="example" src={product.imageUrl || "https://via.placeholder.com/150"} />}
-                  >
-                    <Meta title={product.name} description={
-                      <>
-                        <p className="product-price">{product.price.toLocaleString()}đ</p>
-                        <p className="product-rating">
-                          ⭐ {product.rating > 0 ? product.rating : "Chưa có đánh giá"}
-                        </p></>
-                    } />
-
-                  </Card>
-                </Link>
-              </div>
+              <Link to={`/product/${product.id}`}>
+                <Card
+                  hoverable
+                  style={{
+                    width: 240,
+                  }}
+                  cover={<img alt="example" src={product.imageUrl || "https://via.placeholder.com/150"} />}
+                >
+                  <Meta title={product.name} description={
+                    <>
+                      <p className="product-price">{product.price.toLocaleString()}đ</p>
+                      <p className="product-rating">
+                        ⭐ {product.rating > 0 ? product.rating : "Chưa có đánh giá"}
+                      </p></>
+                  } />
+                </Card>
+              </Link>
             ))}
-          </div>
+          </Flex>
+
           <Pagination align='center' defaultCurrent={currentPage} total={totalPages} defaultPageSize={1} onChange={handlePageChange} />
         </>
-      )}
-    </div>
+      )
+      }
+    </div >
   );
 };
 
