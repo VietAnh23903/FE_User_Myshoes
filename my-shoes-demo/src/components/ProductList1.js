@@ -16,7 +16,7 @@ const ProductList = () => {
   const [isLoading, setIsLoading] = useState(true); // Trạng thái tải dữ liệu
   const [error, setError] = useState(null); // Lưu lỗi (nếu có)
 
-  const itemsPerPage = 35; // Số sản phẩm mỗi trang
+  const itemsPerPage = 36; // Số sản phẩm mỗi trang
 
   useEffect(() => {
     const fetchProducts = async () => {

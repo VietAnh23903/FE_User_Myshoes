@@ -1,102 +1,121 @@
-/* Toàn bộ vùng đăng ký */
+/* Register Section */
 .register-section {
-    background-color: #f9fafb; /* Màu nền nhẹ */
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  background: linear-gradient(to right, #ff7e5f, #feb47b); /* Nền gradient cam */
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+/* Register Container */
+.register-container {
+  max-width: 450px;
+  width: 100%;
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2); /* Hiệu ứng đổ bóng */
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.register-container:hover {
+  transform: translateY(-5px); /* Hiệu ứng nổi khi hover */
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+}
+
+/* Title Styling */
+.register-title {
+  font-size: 26px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
+  color: #ff7e5f; /* Màu cam đậm */
+}
+
+/* Form Group */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-label {
+  display: block;
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #333333; /* Màu chữ đậm */
+}
+
+/* Input Field */
+.form-input {
+  width: 100%;
+  padding: 10px 15px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-input:focus {
+  border-color: #ff7e5f; /* Màu cam khi focus */
+  box-shadow: 0 0 5px rgba(255, 126, 95, 0.3); /* Hiệu ứng sáng */
+}
+
+/* Register Button */
+.register-button {
+  width: 100%;
+  padding: 12px;
+  background: #ff7e5f;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s;
+}
+
+.register-button:hover {
+  background: #e0664e; /* Màu cam đậm hơn khi hover */
+  transform: scale(1.05);
+}
+
+/* Register Options */
+.register-options {
+  margin-top: 15px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.register-options span {
+  color: #333333; /* Màu chữ đậm */
+}
+
+.register-options a {
+  color: #ff7e5f;
+  font-weight: bold;
+  text-decoration: none;
+  margin-left: 5px;
+  transition: color 0.3s ease;
+}
+
+.register-options a:hover {
+  color: #e0664e; /* Đậm hơn khi hover */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .register-container {
     padding: 20px;
   }
-  
-  /* Card đăng ký */
-  .register-container {
-    width: 100%;
-    max-width: 400px;
-  }
-  
-  .register-card {
-    background-color: #ffffff;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Tiêu đề */
+
   .register-title {
-    font-size: 26px;
-    font-weight: bold;
-    color: #4f46e5; /* Màu xanh chủ đạo */
-    text-align: center;
-    margin-bottom: 20px;
+    font-size: 22px;
   }
-  
-  /* Form nhóm */
-  .form-group {
-    margin-bottom: 20px;
-  }
-  
-  .form-label {
-    font-size: 14px;
-    font-weight: 600;
-    color: #374151; /* Màu chữ nhấn mạnh */
-    margin-bottom: 5px;
-    display: block;
-  }
-  
-  .form-input {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #d1d5db;
-    border-radius: 5px;
-    font-size: 14px;
-    transition: all 0.3s ease;
-  }
-  
-  /* Hiệu ứng khi focus */
-  .form-input:focus {
-    outline: none;
-    border-color: #4f46e5;
-    box-shadow: 0 0 4px rgba(79, 70, 229, 0.5);
-  }
-  
-  /* Nút đăng ký */
+
   .register-button {
-    width: 100%;
-    padding: 12px;
-    background-color: #4f46e5;
-    color: #ffffff;
-    font-size: 16px;
-    font-weight: bold;
-    border: none;
-    border-radius: 50px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .register-button:hover {
-    background-color: #4338ca;
-    box-shadow: 0 4px 6px rgba(79, 70, 229, 0.2);
-  }
-  
-  /* Tùy chọn khác */
-  .register-options {
-    margin-top: 15px;
-    text-align: center;
     font-size: 14px;
-    color: #6b7280; /* Màu nhấn phụ */
   }
-  
-  .register-options span {
-    margin-right: 5px;
-  }
-  
-  .login-link {
-    color: #4f46e5;
-    text-decoration: none;
-    transition: color 0.3s;
-  }
-  
-  .login-link:hover {
-    color: #4338ca;
-  }
-  
+}

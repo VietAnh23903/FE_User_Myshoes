@@ -1,73 +1,135 @@
-
-.ant-card .ant-card-meta-description{
-  color: black;
+/* Product Section Container */
+.product-section {
+  margin: 20px auto;
+  max-width: 1200px;
+  padding: 20px;
+  background-color: #f5f5f5; /* Màu nền nhẹ nhàng */
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Đổ bóng cho container */
 }
-.product-price{
+
+/* Title Styling */
+.product-title {
+  font-size: 28px;
   font-weight: bold;
-  text-align: left;
-  font-size: 30px;
+  color: #003366;
+  text-align: center;
+  margin-bottom: 30px;
+  position: relative;
+  text-transform: uppercase;
 }
 
-   .product-section {
-    margin: 20px auto;
-    max-width: 1200px; 
-  }
-  
+.product-title::after {
+  content: "";
+  display: block;
+  width: 80px;
+  height: 4px;
+  background-color: red;
+  margin: 10px auto 0;
+  border-radius: 2px;
+}
+
+/* Product List Grid Layout */
+.product-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); /* Tự động điều chỉnh số cột */
+  gap: 20px;
+  padding: 0;
+}
+
+/* Card Styling */
+.ant-card {
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.ant-card:hover {
+  transform: translateY(-10px); /* Tạo hiệu ứng nổi khi hover */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Image Styling */
+.ant-card-cover img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover; /* Giữ tỷ lệ ảnh đẹp */
+  border-bottom: 1px solid #ddd;
+}
+
+/* Meta Description Styling */
+.ant-card-meta-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #003366;
+  text-align: center;
+}
+
+.ant-card-meta-description {
+  color: #666;
+  font-size: 14px;
+  margin-top: 10px;
+  text-align: center;
+}
+
+/* Product Price Styling */
+.product-price {
+  font-size: 20px;
+  font-weight: bold;
+  color: #e74c3c; /* Màu đỏ thu hút */
+  margin-top: 10px;
+}
+
+/* Product Rating and Sold */
+.product-rating {
+  font-size: 14px;
+  color: #f1c40f; /* Màu vàng cho sao đánh giá */
+}
+
+.product-sold {
+  font-size: 14px;
+  color: #7f8c8d; /* Màu trung tính */
+}
+
+/* Pagination Styling */
+.ant-pagination {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.ant-pagination-item,
+.ant-pagination-prev,
+.ant-pagination-next {
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.ant-pagination-item:hover,
+.ant-pagination-prev:hover,
+.ant-pagination-next:hover {
+  border-color: #003366;
+  color: #003366;
+}
+
+.ant-pagination-item-active {
+  background-color: #003366;
+  border-color: #003366;
+  color: white;
+}
+
+/* Add Responsive Design */
+@media (max-width: 768px) {
   .product-title {
     font-size: 24px;
-    font-weight: bold;
-    color: #003366;
-    text-align: center;
-    margin-bottom: 20px;
-    position: relative;
   }
-  
-  .product-title::after {
-    content: "";
-    display: block;
-    width: 60px;
-    height: 3px;
-    background-color: red;
-    margin: 10px auto 0;
-    border-radius: 2px;
-  }
-  
+
   .product-list {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr); /* Tối đa 5 sản phẩm mỗi dòng */
-    margin-bottom: 20px;
-    
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   }
-  
-  .product-item {
-    background: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 10px;
-    text-align: center;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+  .ant-card-cover img {
+    height: 180px;
   }
-  
-  .product-item img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 5px;
-  }
-  
-  .product-item .name {
-    font-size: 16px;
-    font-weight: bold;
-    margin-top: 10px;
-  }
-  
-  .product-item .price {
-    color: #ff5722;
-    margin-top: 5px;
-  }
-  
-  .product-item .discount {
-    font-size: 14px;
-    color: #007bff;
-    margin-top: 5px;
-  }
-  
+}
