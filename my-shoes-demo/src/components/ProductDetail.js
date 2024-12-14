@@ -69,9 +69,14 @@ const ProductDetail = () => {
       return;
     }
     const callToCart = async () => {
-      const response = await fetchAPI.post(API_CART + `/${idSelected}`, { quantity });
-      console.log(response);
-      openNotification('success', "Thêm vào giỏ hàng thành công");
+      try {
+        const response = await fetchAPI.post(API_CART + `/${idSelected}`, { quantity });
+        console.log(response);
+        openNotification('success', "Thêm vào giỏ hàng thành công!");
+      } catch (error) {
+        openNotification('error', "Vui lòng đăng nhập!");
+      }
+
 
     }
     callToCart();
