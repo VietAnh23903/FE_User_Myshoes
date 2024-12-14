@@ -178,7 +178,7 @@ const ProductDetail = () => {
                   <span className="review-username">{review.user.username}</span>
                   <span className="review-rating">⭐ {review.rating}</span>
                   <span className="review-date">
-                    {new Date(review.reviewedAt).toLocaleString()} | Phân loại hàng: {review.product.variants["kích cỡ"]}
+                    {new Date(review.reviewedAt).toLocaleString()} | Phân loại hàng: {review.productVariant.variants["kích cỡ"]}
                   </span>
                 </div>
               </div>

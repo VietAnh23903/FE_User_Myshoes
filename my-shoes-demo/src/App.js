@@ -19,6 +19,7 @@ import PaymentPage from "./components/Payment";
 import SuccessOrderPage from "./components/SuccessOrderPage";
 import PaymentCallback from "./components/PaymentCallback";
 import ErrorOrderPage from "./components/ErrorOrderPage";
+import { ErrorBoundaryWithNavigate } from "./components/HandleException";
 
 function App() {
   return (
