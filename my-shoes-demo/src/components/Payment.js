@@ -115,10 +115,10 @@ const PaymentPage = () => {
         phone: e.target.phone.value,
         isDefault: e.target.isDefault.checked
       }
-      const response = fetchAPI.post(ADDRESS_URL, newAddress);
+      const response = await fetchAPI.post(ADDRESS_URL, newAddress);
+      setReload(!reload);
       handleCancelNewAddressModal();
       setIsLoad(false);
-      setReload(!reload);
     }
     callAPI();
   }
