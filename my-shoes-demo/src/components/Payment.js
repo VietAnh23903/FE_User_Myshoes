@@ -1,285 +1,247 @@
-import React, { useState } from "react";
-import { useCart } from "../components/CartContext"; // Sử dụng CartContext để lấy dữ liệu
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"; // Dùng để chuyển hướng
 import "../styles/Payment.css"; // Import CSS
+import fetchAPI from "../config/axiosConfig";
+import Loading from "./Loading";
+import { Button, Checkbox, Flex, Form, Image, Modal, notification, Select, Space } from "antd";
+import vnpay from "../assets/vnapy.png"
+
+const ADDRESS_URL = "/address";
+const ORDER_URL = "/order";
+const PAYMENT_URL = "/payment";
 
 const PaymentPage = () => {
-  const { cartItems } = useCart(); // Lấy danh sách sản phẩm và tổng tiền
-  const [selectedPayment, setSelectedPayment] = useState("Thanh toán tiền mặt"); // Mặc định phương thức thanh toán
+  const [orderItems, setOrderItems] = useState(JSON.parse(localStorage.getItem("cart")));
+  const [selectedPayment, setSelectedPayment] = useState("CASH"); // Mặc định phương thức thanh toán
   const [showPaymentModal, setShowPaymentModal] = useState(false); // Trạng thái hiển thị modal thanh toán
-  const [showAddressModal, setShowAddressModal] = useState(false); // Trạng thái hiển thị modal địa chỉ
   const [showNewAddressModal, setShowNewAddressModal] = useState(false); // Trạng thái hiển thị modal thêm địa chỉ mới
-  const [addresses, setAddresses] = useState([
-    { id: 1, name: "Đỗ Tiến Anh", phone: "(+84) 865923203", address: "Số 63, Ngách 63/5 Đường Lê Đức Thọ, Phường Mỹ Đình 2, Quận Nam Từ Liêm, Hà Nội" }
-  ]); // Danh sách địa chỉ
-  const [selectedAddress, setSelectedAddress] = useState(addresses[0]); // Địa chỉ mặc định
-  const [newAddress, setNewAddress] = useState({
-    name: "",
-    phone: "",
-    address: ""
-  }); // Địa chỉ mới
-
-  // Lưu trữ giá trị ban đầu
-  const [initialPayment, setInitialPayment] = useState(selectedPayment); // Lưu phương thức thanh toán ban đầu
-  const [initialAddress, setInitialAddress] = useState(selectedAddress); // Lưu địa chỉ ban đầu
-  const [initialNewAddress, setInitialNewAddress] = useState({ ...newAddress }); // Lưu địa chỉ mới ban đầu
-
+  const [addresses, setAddresses] = useState([]); // Danh sách địa chỉ
+  const [selectedAddress, setSelectedAddress] = useState(addresses[0]?.id);
+  const [reload, setReload] = useState(false);
+  const [isLoad, setIsLoad] = useState(true);
+  const [openVNPAY, setOpenVNPAY] = useState(false);
+  const [orderId, setOrderId] = useState();
   const navigate = useNavigate();
-
-  // Hàm tính tổng số lượng sản phẩm
-  const getTotalQuantity = () => {
-    // return cartItems.reduce((total, item) => total + item.quantity, 0);
-  };
-
-  const handleCheckout = () => {
-    // Chuyển sang trang theo dõi đơn hàng
-    navigate("/order-tracking", { state: { products: cartItems } });
-  };
-
-  const handleSavePaymentMethod = (method) => {
-    setSelectedPayment(method);
-    setShowPaymentModal(false);
-  };
-
-  const handleSaveAddress = (address) => {
-    setSelectedAddress(address);
-    setShowAddressModal(false);
-  };
-
-  const handleChangeAddress = (e) => {
-    const selectedId = e.target.value;
-    const selectedAddr = addresses.find(addr => addr.id === parseInt(selectedId));
-    setSelectedAddress(selectedAddr);
-  };
-
-  const handleAddNewAddress = () => {
-    const newAddressData = {
-      id: addresses.length + 1,
-      name: newAddress.name,
-      phone: newAddress.phone,
-      address: newAddress.address
-    };
-
-    setAddresses([...addresses, newAddressData]);
-    setSelectedAddress(newAddressData); // Chọn địa chỉ mới thêm vào
-    setShowNewAddressModal(false); // Đóng modal
-  };
-
-  const handleDeleteAddress = (addressId) => {
-    // Xử lý xóa địa chỉ theo ID
-    const updatedAddresses = addresses.filter((address) => address.id !== addressId);
-    setAddresses(updatedAddresses); // Cập nhật danh sách địa chỉ sau khi xóa
-    setSelectedAddress({}); // Deselect địa chỉ đã bị xóa
-  };
-
-  const handleChangeNewAddress = (e) => {
-    setNewAddress({
-      ...newAddress,
-      [e.target.name]: e.target.value
+  const user = JSON.parse(localStorage.getItem("user"));
+  const [api, contextHolder] = notification.useNotification();
+  const openNotification = (type, message) => {
+    api[type]({
+      message,
+      placement: 'top',
     });
   };
 
-  // Hàm hủy thay đổi phương thức thanh toán
-  const handleCancelPaymentModal = () => {
-    setSelectedPayment(initialPayment); // Khôi phục lại phương thức thanh toán ban đầu
-    setShowPaymentModal(false);
+  if (!user) {
+    navigate("/");
+  }
+  useEffect(() => {
+    const callAPI = async () => {
+      setIsLoad(true);
+      const addressResponse = await fetchAPI.get(ADDRESS_URL);
+      setAddresses(addressResponse);
+      setSelectedAddress(addressResponse.filter((item) => item.isDefault)[0]?.id)
+      setIsLoad(false);
+    };
+    callAPI();
+  }, [reload]);
+
+
+  const handlePayWithVNPAY = async () => {
+    const body = {
+      paymentMethod: selectedPayment,
+      orderId: orderId
+    }
+    console.log(body);
+    try {
+      const response = await fetchAPI.post(PAYMENT_URL, body);
+      window.location.href = response.url;
+    } catch (e) {
+      openNotification('error', "Đơn hàng bạn đang trong quá trình tạo, vui lòng thử thanh toán lại sau 1-2s");
+    }
+
+  }
+  const handleCheckout = async () => {
+    // setIsLoad(true);
+    const arr = orderItems?.map((item) => {
+      return {
+        id: item?.productVariant?.id,
+        quantity: item?.quantity
+      }
+    });
+    const body = {
+      addressId: selectedAddress,
+      productVariants: arr
+    };
+    try {
+      const response = await fetchAPI.post(ORDER_URL, body);
+      setOrderId(response.orderId);
+      if (selectedPayment === "CASH") {
+        const body = {
+          paymentMethod: selectedPayment,
+          orderId: response.orderId
+        }
+        try {
+          await fetchAPI.post(PAYMENT_URL, body);
+        } catch (e) {
+          openNotification('error', "Đơn hàng bạn đang trong quá trình tạo, vui lòng thử thanh toán lại sau 1-2s");
+        }
+        navigate("/payment-success");
+      }
+      if (selectedPayment === "VNPAY") {
+        console.log("VNPAY");
+        setOpenVNPAY(true);
+        // navigate("/success");
+      }
+
+    } catch (error) {
+
+    } finally {
+      // setIsLoad(false);
+    }
+
+
+    // Chuyển sang trang theo dõi đơn hàng
+    // navigate("/order-tracking", { state: { products: cartItems } });
   };
 
-  // Hàm hủy thay đổi địa chỉ nhận hàng
-  const handleCancelAddressModal = () => {
-    setSelectedAddress(initialAddress); // Khôi phục lại địa chỉ ban đầu
-    setShowAddressModal(false);
-  };
+
+
+  const createNewAddress = async (e) => {
+    e.preventDefault();
+    const callAPI = async () => {
+      setIsLoad(true);
+      const newAddress = {
+        content: e.target.content.value,
+        phone: e.target.phone.value,
+        isDefault: e.target.isDefault.checked
+      }
+      const response = fetchAPI.post(ADDRESS_URL, newAddress);
+      handleCancelNewAddressModal();
+      setIsLoad(false);
+      setReload(!reload);
+    }
+    callAPI();
+  }
 
   // Hàm hủy thay đổi địa chỉ mới
   const handleCancelNewAddressModal = () => {
-    setNewAddress(initialNewAddress); // Khôi phục lại địa chỉ mới ban đầu
     setShowNewAddressModal(false);
   };
+  return isLoad ? <Loading /> : <section className="checkout-section">
+    {contextHolder}
+    <div className="checkout-container">
+      <h2>Thanh toán</h2>
+      <Flex justify="center" vertical align="start">
+        <h3>Địa Chỉ Nhận Hàng</h3>
+        <Space>
+          <Select
+            showSearch
+            style={{
+              width: 500
+            }}
+            onChange={(value) => setSelectedAddress(value)}
+            placeholder="Search to Select"
+            optionFilterProp="label"
+            filterSort={(optionA, optionB) =>
+              (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
+            }
+            value={selectedAddress}
+            options={addresses.map((item) => ({
+              value: item.id,
+              label: item.content
+            }))}
+          />
+          <Button type="default" onClick={() => setShowNewAddressModal(true)}>
+            Thêm mới
+          </Button>
+        </Space>
+      </Flex>
 
-  return (
-    <section className="checkout-section">
-      <div className="checkout-container">
-        <h2>Thanh toán</h2>
-
-        {/* Địa chỉ nhận hàng */}
-        <div className="checkout-address">
-          <h3>Địa Chỉ Nhận Hàng</h3>
-          <div className="address-info">
-            <p>
-              <strong>{selectedAddress.name}</strong> {selectedAddress.phone}
-            </p>
-            <p>{selectedAddress.address}</p>
-            <button
-              className="change-address-btn"
-              onClick={() => setShowAddressModal(true)}
-            >
-              Thay Đổi
-            </button>
-          </div>
-        </div>
-
-        {/* Danh sách sản phẩm */}
-        <div className="checkout-products">
-          <h3>Sản phẩm</h3>
-          <table className="checkout-table">
-            <thead>
-              <tr>
-                <th>Sản phẩm</th>
-                <th>Phân loại</th>
-                <th>Đơn giá</th>
-                <th>Số lượng</th>
-                <th>Thành tiền</th>
+      {/* Danh sách sản phẩm */}
+      <div className="checkout-products">
+        <h3>Sản phẩm</h3>
+        <table className="checkout-table">
+          <thead>
+            <tr>
+              <th>Sản phẩm</th>
+              <th>Phân loại</th>
+              <th>Đơn giá</th>
+              <th>Số lượng</th>
+              <th>Thành tiền</th>
+            </tr>
+          </thead>
+          <tbody>
+            {orderItems?.map((item, index) => (
+              < tr key={"orderItem" + item?.id} >
+                <td>
+                  <div className="product-info">
+                    <img src={item?.productVariant?.imageUrl} alt={item?.productVariant?.name} className="product-image" />
+                    <p>{item?.productVariant?.name}</p>
+                  </div>
+                </td>
+                <td>{Object.values(orderItems[index]?.productVariant?.attributes || [])[0]}</td>
+                <td>{item?.productVariant?.price.toLocaleString("vi-VN")} đ</td>
+                <td>{item?.quantity}</td>
+                <td>{(item?.productVariant.price * item?.quantity).toLocaleString("vi-VN")} đ</td>
               </tr>
-            </thead>
-            <tbody>
-              {/* {cartItems.map((item) => (
-                <tr key={item.id}>
-                  <td>
-                    <div className="product-info">
-                      <img src={item.img} alt={item.name} className="product-image" />
-                      <p>{item.name}</p>
-                    </div>
-                  </td>
-                  <td>{item.size}</td>
-                  <td>{item.price.toLocaleString("vi-VN")} đ</td>
-                  <td>{item.quantity}</td>
-                  <td>{(item.price * item.quantity).toLocaleString("vi-VN")} đ</td>
-                </tr>
-              ))} */}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Phương thức thanh toán */}
-        <div className="checkout-payment">
-          <h3>Phương thức thanh toán</h3>
-          <div className="payment-selected">
-            <p>
-              {selectedPayment}
-              <button
-                className="change-payment-btn"
-                onClick={() => setShowPaymentModal(true)}
-              >
-                Thay Đổi
-              </button>
-            </p>
-          </div>
-        </div>
-
-        {/* Tổng cộng */}
-        <div className="checkout-total">
-          <h3>Tổng số tiền<em>({getTotalQuantity()} sản phẩm)</em></h3>
-          <p>
-            <strong>
-              {/* {(totalPrice).toLocaleString("vi-VN")} đ */}
-            </strong>
-          </p>
-        </div>
-
-        {/* Nút Thanh toán */}
-        <div className="checkout-buttons">
-          <button className="pay-now-btn" onClick={handleCheckout}>
-            Thanh toán
-          </button>
-        </div>
+            ))}
+          </tbody>
+        </table>
       </div>
 
-      {/* Modal thay đổi phương thức thanh toán */}
-      {showPaymentModal && (
-        <div className="payment-modal">
-          <div className="modal-content">
-            <h3>Chọn phương thức thanh toán</h3>
-            <div className="payment-options">
-              <label>
-                <input
-                  type="radio"
-                  value="Thanh toán tiền mặt"
-                  checked={selectedPayment === "Thanh toán tiền mặt"}
-                  onChange={(e) => setSelectedPayment(e.target.value)}
-                />
-                Thanh toán tiền mặt
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  value="Thanh toán bằng VnPay"
-                  checked={selectedPayment === "Thanh toán bằng VnPay"}
-                  onChange={(e) => setSelectedPayment(e.target.value)}
-                />
-                Thanh toán bằng VnPay
-              </label>
-            </div>
-            <div className="modal-buttons">
-              <button onClick={handleCancelPaymentModal}>Hủy</button>
-              <button onClick={() => handleSavePaymentMethod(selectedPayment)}>
-                Lưu
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Phương thức thanh toán */}
+      <Flex align="start" justify="center" vertical>
+        <h3>Chọn phương thức thanh toán</h3>
+        <Select
+          showSearch
+          style={{
+            width: 500
+          }}
+          onChange={(value) => setSelectedPayment(value)}
+          placeholder="Search to Select"
+          optionFilterProp="label"
+          filterSort={(optionA, optionB) =>
+            (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
+          }
+          value={selectedPayment}
+          options={[
+            { value: "CASH", label: "Thanh toán bằng tiền mặt" },
+            { value: "VNPAY", label: "Thanh toán bằng VNPAY" }
+          ]}
+        />
+      </Flex>
 
-      {/* Modal thay đổi địa chỉ nhận hàng */}
-      {showAddressModal && (
-        <div className="address-modal">
-          <div className="modal-content">
-            <h3>Chọn địa chỉ nhận hàng</h3>
-            <div className="address-options">
-              {addresses.map((address) => (
-                <label key={address.id}>
-                  <input
-                    type="radio"
-                    value={address.id}
-                    checked={selectedAddress.id === address.id}
-                    onChange={handleChangeAddress}
-                  />
-                  {address.name} - {address.phone} - {address.address}
-                </label>
-              ))}
-              <button onClick={() => setShowNewAddressModal(true)} className="add-address-btn">
-                Thêm địa chỉ mới
-              </button>
-            </div>
-            <div className="modal-buttons">
-              <button onClick={handleCancelAddressModal}>Hủy</button>
-              {/* Thêm nút Xóa */}
-              {selectedAddress.id && (
-                <button onClick={() => handleDeleteAddress(selectedAddress.id)} className="delete-address-btn">
-                  Xóa
-                </button>
-              )}
-              <button onClick={() => handleSaveAddress(selectedAddress)}>
-                Lưu
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Tổng cộng */}
+      <div className="checkout-total">
+        <h3>Tổng số tiền:<em> {orderItems.reduce((acc, item) => acc + (item.productVariant?.price || 0) * item?.quantity, 0).toLocaleString()} đ </em></h3>
+        <p>
+          <strong>
+            {/* {(totalPrice).toLocaleString("vi-VN")} đ */}
+          </strong>
+        </p>
+      </div>
 
-      {/* Modal nhập địa chỉ mới */}
-      {showNewAddressModal && (
+      {/* Nút Thanh toán */}
+      <div className="checkout-buttons">
+        <button className="pay-now-btn" onClick={handleCheckout}>
+          Thanh toán
+        </button>
+      </div>
+    </div>
+
+
+    {/* Modal nhập địa chỉ mới */}
+    {
+      showNewAddressModal && (
         <div className="new-address-modal">
           <div className="modal-content">
             <h3>Thêm địa chỉ mới</h3>
-            <form>
-              <label>
-                <p>Tên người nhận:</p>
-                <input
-                  type="text"
-                  name="name"
-                  value={newAddress.name}
-                  onChange={handleChangeNewAddress}
-                  required
-                />
-              </label>
+            <form onSubmit={createNewAddress}>
               <label>
                 <p>Số điện thoại:</p>
                 <input
                   type="text"
                   name="phone"
-                  value={newAddress.phone}
-                  onChange={handleChangeNewAddress}
                   required
                 />
               </label>
@@ -287,22 +249,34 @@ const PaymentPage = () => {
                 <p>Địa chỉ:</p>
                 <input
                   type="text"
-                  name="address"
-                  value={newAddress.address}
-                  onChange={handleChangeNewAddress}
+                  name="content"
                   required
                 />
               </label>
+              <label>
+                <p>Đặt làm mặc định:</p>
+                <Checkbox name="isDefault"></Checkbox>
+              </label>
+              <div className="modal-buttons">
+                <button onClick={handleCancelNewAddressModal}>Hủy</button>
+                <button type="submit">Lưu</button>
+              </div>
             </form>
-            <div className="modal-buttons">
-              <button onClick={handleCancelNewAddressModal}>Hủy</button>
-              <button onClick={handleAddNewAddress}>Lưu</button>
-            </div>
+
           </div>
         </div>
-      )}
-    </section>
-  );
+      )
+    }
+    <Modal
+      onOk={handlePayWithVNPAY}
+      okText="Thanh toán"
+      cancelText="Hủy"
+      title={<Flex justify="center"><h3>Thanh toán bằng VNPAY</h3></Flex>} open={openVNPAY} onClose={() => setOpenVNPAY(false)} onCancel={() => setOpenVNPAY(false)} >
+      <Flex justify="center">
+        <Image src={vnpay} preview={false} />
+      </Flex>
+    </Modal>
+  </section >;
 };
 
 export default PaymentPage;

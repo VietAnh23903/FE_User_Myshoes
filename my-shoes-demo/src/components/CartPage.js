@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, Outlet, useNavigate } from 'react-router-dom'; // Dùng để điều hướng trang thanh toán
+import { Link, useNavigate } from 'react-router-dom'; // Dùng để điều hướng trang thanh toán
 import "../styles/CartPage.css"; // Import CSS cho trang giỏ hàng
 import fetchAPI from '../config/axiosConfig';
 import Loading from './Loading';
@@ -9,7 +9,6 @@ import { useCart } from "../components/CartContext";
 const API_URL = "/cart";
 
 const CartPage = () => {
-  const { clearCart, addToCart, removeFromCart } = useCart();
   const navigate = useNavigate(); // Khai báo navigate để chuyển hướng tới trang thanh toán
   const user = JSON.parse(localStorage.getItem("user"));
   const [cartItems, setCartItems] = useState([]);
@@ -22,11 +21,10 @@ const CartPage = () => {
   const [form] = Form.useForm();
 
   const onFinish = (values) => {
-    clearCart();
+    localStorage.removeItem("cart");
     const selectedItems = values.cartItems
       ?.filter((item) => item.checked);
-    console.log(selectedItems);
-    addToCart(selectedItems);
+    localStorage.setItem("cart", JSON.stringify(selectedItems));
     navigate("/payment")
   };
 
@@ -57,8 +55,10 @@ const CartPage = () => {
 
   const handleDelete = (id) => {
     const deleteCart = async () => {
-      await fetchAPI.delete(API_URL + `/${id}`)
-      removeFromCart(id);
+      await fetchAPI.delete(API_URL + `/${id}`);
+      const cart = JSON.parse(localStorage.getItem("cart"));
+      cart.filter((item) => item.id !== id);
+      localStorage.setItem("cart", JSON.stringify(cart));
       const updatedCartItems = cartItems.filter((item) => item.id !== id); // Lọc bỏ sản phẩm
       setCartItems(updatedCartItems); // Cập nhật danh sách sản phẩm
       form.setFieldsValue({ cartItems: updatedCartItems });
@@ -66,6 +66,7 @@ const CartPage = () => {
     };
     deleteCart();
   };
+
 
   return isLoad ? <Loading /> : <Form layout='vertical' form={form} onFinish={onFinish}>
     <table className="cart-table">

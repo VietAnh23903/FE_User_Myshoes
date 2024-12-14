@@ -16,6 +16,9 @@ import SearchResult from "./components/SearchResult";
 import OrderTracking from "./components/OrderTracking";
 import { CartProvider } from "./components/CartContext";
 import PaymentPage from "./components/Payment";
+import SuccessOrderPage from "./components/SuccessOrderPage";
+import PaymentCallback from "./components/PaymentCallback";
+import ErrorOrderPage from "./components/ErrorOrderPage";
 
 function App() {
   return (
@@ -34,6 +37,9 @@ function App() {
             <Route path="/search" element={<SearchResult />} />
             <Route path="/order-tracking" element={<OrderTracking />} />
             <Route path="/payment" element={<PaymentPage />} />
+            <Route path="/payment-success" element={<SuccessOrderPage />} />
+            <Route path="/payment-error" element={<ErrorOrderPage />} />
+            <Route path="/payment-callback" element={<PaymentCallback />} />
           </Routes>
         </div>
       </CartProvider>

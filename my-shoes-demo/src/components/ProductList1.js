@@ -71,10 +71,17 @@ const ProductList = () => {
                 >
                   <Meta title={product.name} description={
                     <>
-                      <p className="product-price">{product.price.toLocaleString()}đ</p>
-                      <p className="product-rating">
-                        ⭐ {product.rating > 0 ? product.rating : "Chưa có đánh giá"}
-                      </p></>
+                      <Flex align='center' justify='center' vertical>
+                        <div className="product-price">{product.price.toLocaleString()}đ</div>
+                        <Space direction='vertical' align='center' >
+                          <div className="product-rating">
+                            {product.rating > 0 ? product.rating : "Chưa có đánh giá"} ⭐
+                          </div>
+                          <div >Đã bán: {product.sold}</div>
+                        </Space>
+                      </Flex>
+                    </>
+
                   } />
                 </Card>
               </Link>
