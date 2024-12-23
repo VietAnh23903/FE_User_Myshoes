@@ -1,47 +1,66 @@
 import React from 'react';
 import '../styles/RegisterForm.css';
+import { notification } from 'antd';
+import fetchAPI from '../config/axiosConfig';
+import { useNavigate } from 'react-router-dom';
+
+const USER_API = "/auth/signup";
 
 const Register = () => {
-  const submitForm = (e) => {
+  const [api, contextHolder] = notification.useNotification();
+  const navigate = useNavigate();
+  const openNotification = (type, message) => {
+    api[type]({
+      message,
+      placement: 'top',
+    });
+  };
+  const submitForm = async (e) => {
     e.preventDefault();
+    const fullName = e.target.fullName.value;
+    const email = e.target.email.value;
+    const username = e.target.username.value;
+    const password = e.target.password.value;
+    const confirmPassword = e.target.confirmPassword.value;
+    if (password !== confirmPassword) {
+      openNotification('error', "Mật khẩu nhập lại không khớp!");
+      return;
+    } else {
+      try {
+        const body = { fullName, email, username, password };
+        await fetchAPI.post(USER_API, body);
+        navigate("/login");
+      } catch (e) {
+        openNotification('error', "Tên tài khoản đã tồn tại!");
+      }
+    }
+
+
     // Xử lý logic đăng ký ở đây
   };
 
   return (
     <section className="register-section">
+      {contextHolder}
       <div className="register-container">
         <div className="register-card">
           <h2 className="register-title">Đăng Ký Tài Khoản</h2>
           <form onSubmit={submitForm}>
             {/* Họ và tên */}
             <div className="form-group">
-              <label htmlFor="fullname" className="form-label">
+              <label htmlFor="fullName" className="form-label">
                 Họ và tên
               </label>
               <input
                 type="text"
-                id="fullname"
-                name="fullname"
+                id="fullName"
+                name="fullName"
                 className="form-input"
                 placeholder="Nhập họ và tên của bạn"
                 required
               />
             </div>
             {/* Số điện thoại */}
-            <div className="form-group">
-              <label htmlFor="phone" className="form-label">
-                Số điện thoại
-              </label>
-              <input
-                type="tel"
-                id="phone"
-                name="phone"
-                className="form-input"
-                placeholder="Nhập số điện thoại"
-                required
-              />
-            </div>
-            {/* Email */}
             <div className="form-group">
               <label htmlFor="email" className="form-label">
                 Email
@@ -51,7 +70,21 @@ const Register = () => {
                 id="email"
                 name="email"
                 className="form-input"
-                placeholder="Nhập email"
+                placeholder="Nhập địa chỉ gmail"
+                required
+              />
+            </div>
+            {/* Email */}
+            <div className="form-group">
+              <label htmlFor="username" className="form-label">
+                Tài khoản
+              </label>
+              <input
+                type="text"
+                id="username"
+                name="username"
+                className="form-input"
+                placeholder="Nhập tài khoản"
                 required
               />
             </div>
@@ -71,13 +104,13 @@ const Register = () => {
             </div>
             {/* Nhập lại mật khẩu */}
             <div className="form-group">
-              <label htmlFor="confirm-password" className="form-label">
+              <label htmlFor="confirmPassword" className="form-label">
                 Nhập lại mật khẩu
               </label>
               <input
                 type="password"
-                id="confirm-password"
-                name="confirm-password"
+                id="confirmPassword"
+                name="confirmPassword"
                 className="form-input"
                 placeholder="Xác nhận mật khẩu"
                 required

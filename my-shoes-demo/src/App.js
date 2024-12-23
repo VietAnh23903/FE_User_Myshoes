@@ -19,7 +19,7 @@ import PaymentPage from "./components/Payment";
 import SuccessOrderPage from "./components/SuccessOrderPage";
 import PaymentCallback from "./components/PaymentCallback";
 import ErrorOrderPage from "./components/ErrorOrderPage";
-import { ErrorBoundaryWithNavigate } from "./components/HandleException";
+import SearchListProduct from "./components/SearchListProduct";
 
 function App() {
   return (
@@ -35,12 +35,13 @@ function App() {
             <Route path="/user-info" element={<UserInformation />} />
             <Route path="/cart" element={<CartPage />} />
             <Route path="/product/:id" element={<ProductDetail />} />
-            <Route path="/search" element={<SearchResult />} />
             <Route path="/order-tracking" element={<OrderTracking />} />
             <Route path="/payment" element={<PaymentPage />} />
             <Route path="/payment-success" element={<SuccessOrderPage />} />
             <Route path="/payment-error" element={<ErrorOrderPage />} />
             <Route path="/payment-callback" element={<PaymentCallback />} />
+            <Route path="/search" element={<SearchListProduct />} />
+
           </Routes>
         </div>
       </CartProvider>

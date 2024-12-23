@@ -5,6 +5,7 @@ import fetchAPI from "../config/axiosConfig";
 import { Button, Collapse, Flex, Form, Input, Modal, notification, Rate, Space, Upload } from "antd";
 import Loading from "./Loading";
 import { PlusOutlined } from "@ant-design/icons";
+import timeAgo from "../utils/DateUtils";
 
 const API_URL = "/order"
 const PAYMENT_URL = "/payment";
@@ -94,14 +95,14 @@ const OrderTrackingPage = () => {
     const callAPI = async () => {
       setIsLoad(true);
       if (currentStatus != "NOT_REVIEWED" && currentStatus != "REVIEW") {
-        const response = await fetchAPI.get(API_URL, { page: 0, size: 100, status: currentStatus });
+        const response = await fetchAPI.get(API_URL, { page: 0, size: 100, status: currentStatus, sortBy: "createdAt_desc" });
         setOrders(response.data);
         setProducts([]);
       }
       else {
         setOrders([]);
         const isReview = currentStatus == "NOT_REVIEWED" ? false : true;
-        const response = await fetchAPI.get(REVIEW_URL, { page: 0, size: 100, isReview });
+        const response = await fetchAPI.get(REVIEW_URL, { page: 0, size: 100, isReview, sortBy: "reviewedAt_asc" });
         console.log(response);
         setProducts(response.data)
       }
@@ -121,7 +122,6 @@ const OrderTrackingPage = () => {
         {[
           { value: "PENDING", label: "Chưa thanh toán" },
           { value: "PAYMENT_CONFIRMED", label: "Đang Chuẩn bị hàng" },
-          { value: "SHIPPING", label: "Đang giao hàng" },
           { value: "SUCCESS", label: "Giao hàng thành công" },
           { value: "NOT_REVIEWED", label: "Chưa Đánh giá" },
           { value: "REVIEW", label: "Đã Đánh giá" }
@@ -142,7 +142,11 @@ const OrderTrackingPage = () => {
         return {
           key: "ordeee:" + item.id,
           label: <Flex justify="space-between" align="center">
-            <h3>Mã đơn hàng :{item.id}</h3>
+            <Space direction="vertical">
+              <h3>Mã đơn hàng :{item.id}</h3>
+              <div>Ngày tạo: {item.createdAt}</div>
+              <div>({timeAgo(item.createdAt)})</div>
+            </Space>
             <Space direction="vertical" size={"small"}>
               <div> Địa chỉ nhận: {item.shippingAddress.content}</div>
               <div>Số điện thoại nhận: {item.shippingAddress.phone} </div>
@@ -171,7 +175,7 @@ const OrderTrackingPage = () => {
                   <td>
                     <img src={product.imageUrl} alt={product.name} className="product-image" />
                   </td>
-                  <td>{product.name}</td>
+                  <td><Link to={`/product/${product.productId}`}>{product.name}</Link></td>
                   <td>{Object.values(product?.attributes || [])[0]}</td>
                   <td>{product.quantity}</td>
                   <td>{product.price.toLocaleString()} ₫</td>
@@ -197,6 +201,7 @@ const OrderTrackingPage = () => {
             <>
               <th>Đánh giá</th>
               <th>Bình luận</th>
+              <th>Ngày Đánh giá</th>
             </>
           }
         </tr>
@@ -219,6 +224,12 @@ const OrderTrackingPage = () => {
               <>
                 <td>{item.rating} ⭐</td>
                 <td>{item.comment}</td>
+                <td>
+                  <Space direction="vertical">
+                    {item.reviewedAt}
+                    {timeAgo(item.reviewedAt)}
+                  </Space>
+                </td>
               </>
             }
 

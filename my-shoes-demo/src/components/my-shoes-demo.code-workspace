@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "../.."
+		},
+		{
+			"path": "../../../../../project/copy"
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "my-shoes-demo"
+	}
+}

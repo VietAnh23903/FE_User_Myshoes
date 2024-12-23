@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom"; // Để lấy id sản phẩm từ URL
+import { useNavigate, useParams } from "react-router-dom"; // Để lấy id sản phẩm từ URL
 import fetchAPI from '../config/axiosConfig';
 import "../styles/ProductDetail.css";
 import Loading from './Loading';
@@ -14,13 +14,14 @@ const ProductDetail = () => {
   const [productDetail, setProductDetail] = useState({});
   const [prirmaryImage, setPrimaryImage] = useState("");
   const [images, setImages] = useState([]);
-  const [variants, setVariants] = useState("");
+  const [variants, setVariants] = useState([]);
   const [price, setPrice] = useState(0);
   const [stock, setStock] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [quantity, setQuantity] = useState(1); // Số lượng
   const [reviews, setReviews] = useState([]);
   const [idSelected, setIdSelected] = useState(null);
+  const navigate = useNavigate();
 
   const [api, contextHolder] = notification.useNotification();
   const openNotification = (type, message) => {
@@ -28,6 +29,32 @@ const ProductDetail = () => {
       message,
       placement: 'top',
     });
+  };
+  const handleBuyNow = async () => {
+
+    const user = JSON.parse(localStorage.getItem("user"));
+    console.log(productDetail);
+
+    if (!user) {
+      openNotification('error', "Vui lòng đăng nhập!");
+      return;
+    }
+    if (!idSelected) {
+      openNotification('error', "vui lòng chọn kích thước");
+      return;
+    }
+    const productVariant = variants.filter((item => item.id === idSelected))[0];
+    const imageUrl = productDetail.images.filter((item) => item.isPrimary)[0]?.url || "";
+    const body = {
+      quantity,
+      productVariant: {
+        ...productVariant,
+        name: productDetail.name,
+        imageUrl
+      }
+    }
+    localStorage.setItem("cart", JSON.stringify([body]));
+    navigate("/payment");
   };
   useEffect(() => {
     const fetchProduct = async () => {
@@ -146,7 +173,7 @@ const ProductDetail = () => {
           </div>
           <div className="product-buttons">
             <button className="add-to-cart" onClick={addToCart}>Thêm vào giỏ hàng</button>
-            <button className="buy-now">Mua ngay</button>
+            <button className="buy-now" onClick={handleBuyNow}>Mua ngay</button>
           </div>
         </div>
 
