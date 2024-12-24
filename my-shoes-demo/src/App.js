@@ -20,6 +20,7 @@ import SuccessOrderPage from "./components/SuccessOrderPage";
 import PaymentCallback from "./components/PaymentCallback";
 import ErrorOrderPage from "./components/ErrorOrderPage";
 import SearchListProduct from "./components/SearchListProduct";
+import SearchCategoryProducts from "./components/SearchCategoryProducts";
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
             <Route path="/payment-error" element={<ErrorOrderPage />} />
             <Route path="/payment-callback" element={<PaymentCallback />} />
             <Route path="/search" element={<SearchListProduct />} />
+            <Route path="/product/category/:id" element={<SearchCategoryProducts />} />
 
           </Routes>
         </div>
